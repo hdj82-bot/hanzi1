@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>일취월장</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper: #f6f2e9;
+  --paper-raised: #fbf8f2;
+  --ink: #221d18;
+  --ink-soft: #5b5347;
+  --ink-faint: #9a9081;
+  --line: #ded2ba;
+  --line-soft: #e8ddc7;
+  --seal: #a8331f;
+  --seal-deep: #8a2818;
+  --seal-tint: #f1e1d8;
+  --jade: #3f6152;
+  --jade-tint: #dfe8de;
+  --gold: #a9803a;
+  --shadow: 0 1px 2px rgba(34,29,24,.06), 0 8px 20px -12px rgba(34,29,24,.18);
+}
+:root[data-theme="dark"]{
+  --paper: #1b1713;
+  --paper-raised: #221d18;
+  --ink: #ece4d6;
+  --ink-soft: #b7ab97;
+  --ink-faint: #776b5a;
+  --line: #3a3226;
+  --line-soft: #2c261e;
+  --seal: #d4674f;
+  --seal-deep: #e0836c;
+  --seal-tint: #3a251f;
+  --jade: #7fa892;
+  --jade-tint: #24312a;
+  --gold: #c9a05f;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.55);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper: #1b1713;
+    --paper-raised: #221d18;
+    --ink: #ece4d6;
+    --ink-soft: #b7ab97;
+    --ink-faint: #776b5a;
+    --line: #3a3226;
+    --line-soft: #2c261e;
+    --seal: #d4674f;
+    --seal-deep: #e0836c;
+    --seal-tint: #3a251f;
+    --jade: #7fa892;
+    --jade-tint: #24312a;
+    --gold: #c9a05f;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.55);
+  }
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Noto Serif KR', 'Noto Serif SC', serif;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--seal-tint); color:var(--seal-deep); }
+
+/* subtle paper grain */
+.grain{
+  position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5; mix-blend-mode:multiply;
+  background-image:radial-gradient(var(--ink-faint) .5px, transparent .5px);
+  background-size:3px 3px;
+  opacity:.05;
+}
+:root[data-theme="dark"] .grain{ mix-blend-mode:screen; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .grain{ mix-blend-mode:screen; }
+}
+
+a{ color:inherit; }
+.wrap{ max-width:920px; margin:0 auto; padding:0 24px 120px; position:relative; z-index:1; }
+
+/* ---------- HEADER ---------- */
+header.hero{
+  padding:64px 0 40px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:48px;
+}
+.eyebrow{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--seal);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+.eyebrow::before{
+  content:"";
+  width:7px; height:7px; border-radius:50%;
+  background:var(--seal);
+  display:inline-block;
+}
+h1.title{
+  font-family:'Noto Serif SC', serif;
+  font-weight:900;
+  font-size:clamp(40px, 7vw, 64px);
+  line-height:1.08;
+  margin:0 0 6px;
+  text-wrap:balance;
+  letter-spacing:-.01em;
+}
+h1.title .sub{
+  display:block;
+  font-family:'Noto Serif KR', serif;
+  font-weight:600;
+  font-size:.32em;
+  color:var(--ink-soft);
+  margin-top:10px;
+  letter-spacing:0;
+}
+.hero-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:28px;
+  margin-top:34px;
+  align-items:flex-end;
+}
+.progress-block{ flex:1 1 260px; min-width:220px; }
+.progress-label{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:'JetBrains Mono', monospace;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  margin-bottom:8px;
+}
+.progress-label b{
+  font-family:'Noto Serif KR', serif;
+  font-weight:700;
+  font-size:16px;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.progress-track{
+  height:6px;
+  border-radius:3px;
+  background:var(--line-soft);
+  overflow:hidden;
+  border:1px solid var(--line);
+}
+.progress-fill{
+  height:100%;
+  width:10%;
+  background:linear-gradient(90deg, var(--seal-deep), var(--seal));
+  border-radius:3px;
+}
+.hero-links{ display:flex; gap:10px; flex-wrap:wrap; }
+.pill-link{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  letter-spacing:.02em;
+  padding:9px 14px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  color:var(--ink-soft);
+  text-decoration:none;
+  background:var(--paper-raised);
+  white-space:nowrap;
+}
+.hero-links .pill-link:hover{ border-color:var(--seal); color:var(--seal); }
+
+/* ---------- SECTION HEADS ---------- */
+.section-head{
+  display:flex;
+  align-items:baseline;
+  gap:14px;
+  margin:0 0 24px;
+}
+.section-head .num{
+  font-family:'JetBrains Mono', monospace;
+  font-size:13px;
+  color:var(--ink-faint);
+}
+.section-head h2{
+  font-family:'Noto Serif KR', serif;
+  font-weight:700;
+  font-size:22px;
+  margin:0;
+}
+.section-head .hint{
+  font-size:13px;
+  color:var(--ink-faint);
+  margin-left:auto;
+  font-family:'Noto Serif KR', serif;
+}
+
+/* ---------- FILTER CHIPS ---------- */
+.filters{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin-bottom:28px;
+}
+.chip{
+  font-family:'Noto Serif KR', serif;
+  font-size:13.5px;
+  padding:7px 14px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:var(--paper-raised);
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:border-color .15s, color .15s, background .15s;
+}
+.chip:hover{ border-color:var(--seal); color:var(--seal); }
+.chip.active{
+  background:var(--seal);
+  border-color:var(--seal);
+  color:#fdf6f0;
+}
+:root[data-theme="dark"] .chip.active{ color:#1b1713; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .chip.active{ color:#1b1713; } }
+
+/* ---------- INDEX GRID (stamp cards) ---------- */
+.stamp-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+  gap:14px;
+  margin-bottom:64px;
+}
+.stamp{
+  position:relative;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:20px 14px 16px;
+  text-align:center;
+  text-decoration:none;
+  color:var(--ink);
+  box-shadow:var(--shadow);
+  transition:transform .15s ease, border-color .15s ease;
+  cursor:pointer;
+}
+.stamp:hover{ transform:translateY(-3px); border-color:var(--seal); }
+.stamp:focus-visible{ outline:2px solid var(--seal); outline-offset:2px; }
+.stamp .hanzi{
+  font-family:'Noto Serif SC', serif;
+  font-weight:700;
+  font-size:30px;
+  line-height:1.15;
+  letter-spacing:.02em;
+}
+.stamp .pinyin{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--ink-faint);
+  margin-top:8px;
+  letter-spacing:.01em;
+}
+.stamp .hangul{
+  font-size:13px;
+  font-weight:600;
+  color:var(--seal);
+  margin-top:4px;
+}
+.stamp .idx{
+  position:absolute; top:8px; right:10px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  color:var(--ink-faint);
+}
+
+/* ---------- ENTRY CARDS ---------- */
+.entries{ display:flex; flex-direction:column; gap:20px; }
+.entry{
+  scroll-margin-top:24px;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.entry-head{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  padding:26px 28px;
+  cursor:pointer;
+  user-select:none;
+}
+.entry-head .glyph{
+  font-family:'Noto Serif SC', serif;
+  font-weight:900;
+  font-size:46px;
+  line-height:1;
+  color:var(--ink);
+  flex-shrink:0;
+  width:1.4em;
+  text-align:center;
+}
+.entry-head .id{
+  flex:1; min-width:0;
+}
+.entry-head .row1{
+  display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+}
+.entry-head .hangul-title{
+  font-family:'Noto Serif KR', serif;
+  font-weight:700;
+  font-size:20px;
+}
+.entry-head .pinyin{
+  font-family:'JetBrains Mono', monospace;
+  font-size:13px;
+  color:var(--ink-faint);
+}
+.entry-head .meaning{
+  margin-top:5px;
+  font-size:14.5px;
+  color:var(--ink-soft);
+  line-height:1.5;
+}
+.entry-head .tags{
+  display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;
+}
+.tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10.5px;
+  letter-spacing:.03em;
+  padding:3px 9px;
+  border-radius:10px;
+  background:var(--jade-tint);
+  color:var(--jade);
+}
+.tag.warn{ background:var(--seal-tint); color:var(--seal-deep); }
+.chevron{
+  flex-shrink:0;
+  width:20px; height:20px;
+  color:var(--ink-faint);
+  transition:transform .2s ease;
+}
+.entry.open .chevron{ transform:rotate(180deg); }
+
+.entry-body{
+  display:grid;
+  grid-template-rows:0fr;
+  transition:grid-template-rows .25s ease;
+  border-top:1px solid transparent;
+}
+.entry.open .entry-body{
+  grid-template-rows:1fr;
+  border-top-color:var(--line);
+}
+.entry-body-inner{ overflow:hidden; }
+.entry-content{
+  padding:6px 28px 30px;
+  display:grid;
+  gap:22px;
+}
+.field{ max-width:65ch; }
+.field h3{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--seal);
+  margin:0 0 8px;
+  display:flex; align-items:center; gap:8px;
+}
+.field h3::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--line-soft);
+}
+.field p, .field .zh{
+  margin:0 0 6px;
+  font-size:15.5px;
+  line-height:1.75;
+  color:var(--ink);
+}
+.field .zh{
+  font-family:'Noto Serif SC', serif;
+  color:var(--ink-soft);
+  font-size:14.5px;
+}
+.field .en{ color:var(--ink-soft); font-size:13.5px; }
+.quote{
+  margin:12px 0 0;
+  padding:12px 18px;
+  border-left:2px solid var(--gold);
+  background:var(--line-soft);
+  border-radius:0 6px 6px 0;
+}
+.quote .zh-line{ font-family:'Noto Serif SC', serif; font-size:15px; }
+.quote .ko-line{ font-size:13.5px; color:var(--ink-soft); margin-top:4px; }
+.example{ margin-bottom:12px; }
+.example .zh{ margin-bottom:2px; }
+.example .ko{ font-size:13.5px; color:var(--ink-soft); }
+.example b, .quote b{ color:var(--seal); font-weight:700; }
+.compare-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  margin-top:8px;
+}
+.compare-table th, .compare-table td{
+  border:1px solid var(--line);
+  padding:8px 12px;
+  text-align:left;
+}
+.compare-table th{
+  background:var(--line-soft);
+  font-weight:600;
+  font-size:12.5px;
+  color:var(--ink-soft);
+}
+.note-flag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--gold);
+  margin-top:4px;
+}
+.field.empty p{ color:var(--ink-faint); font-style:italic; font-size:14px; }
+.crosslinks a{
+  color:var(--seal);
+  text-decoration:none;
+  border-bottom:1px dotted var(--seal);
+}
+.crosslinks a:hover{ border-bottom-style:solid; }
+
+/* ---------- ROADMAP ---------- */
+.roadmap{
+  margin-top:64px;
+  padding:28px 28px 30px;
+  border:1px dashed var(--line);
+  border-radius:10px;
+  background:var(--paper-raised);
+}
+.roadmap h2{
+  font-family:'Noto Serif KR', serif;
+  font-size:17px;
+  margin:0 0 14px;
+}
+.roadmap ul{
+  margin:0; padding:0; list-style:none;
+  display:grid; gap:9px;
+}
+.roadmap li{
+  display:flex; align-items:baseline; gap:10px;
+  font-size:14px; color:var(--ink-soft);
+}
+.roadmap li .dir{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--ink-faint);
+  min-width:88px;
+}
+
+footer{
+  margin-top:56px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  font-family:'JetBrains Mono', monospace;
+  font-size:11.5px;
+  color:var(--ink-faint);
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+}
+
+@media (max-width:600px){
+  .entry-head{ padding:20px 18px; gap:14px; }
+  .entry-head .glyph{ font-size:36px; }
+  .entry-content{ padding:6px 18px 24px; }
+  header.hero{ padding:44px 0 30px; }
+}
+
+[hidden]{ display:none !important; }
+</style>
+
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">hdj82-bot / hanzi1 — chengyu/</div>
+    <h1 class="title">日就月将<span class="sub">사자성어 아카이브 · 四字成语整理</span></h1>
+    <p style="margin:18px 0 0; max-width:60ch; color:var(--ink-soft); font-size:15.5px; line-height:1.7;">
+      경기대학교 중어중문전공 홍길동이 정리하는 사자성어 노트입니다. 출전·병음·한국어 대응
+      표현까지 한 항목씩 채워, 100개를 목표로 진행 중입니다.
+    </p>
+    <div class="hero-meta">
+      <div class="progress-block">
+        <div class="progress-label"><span>진행률 PROGRESS</span><b>10 / 100</b></div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="hero-links">
+        <a class="pill-link" href="https://github.com/hdj82-bot/hanzi1" target="_blank" rel="noopener">github.com/hdj82-bot/hanzi1</a>
+        <a class="pill-link" href="https://github.com/hdj82-bot/hanzi1/blob/main/docs/FORMAT.md" target="_blank" rel="noopener">데이터 형식 규약</a>
+      </div>
+    </div>
+  </header>
+
+  <section aria-label="목차">
+    <div class="section-head">
+      <span class="num">01</span>
+      <h2>전체 목록</h2>
+      <span class="hint">클릭하면 아래 상세로 이동합니다</span>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="stamp-grid" id="stampGrid"></div>
+  </section>
+
+  <section aria-label="상세 항목">
+    <div class="section-head">
+      <span class="num">02</span>
+      <h2>상세 노트</h2>
+      <span class="hint">제목을 클릭해 펼치기</span>
+    </div>
+    <div class="entries" id="entries"></div>
+  </section>
+
+  <div class="roadmap">
+    <h2>다음 단계 · 接下来</h2>
+    <ul>
+      <li><span class="dir">chengyu/</span> 90개 항목 추가 — 목표 100개</li>
+      <li><span class="dir">drama/</span> 중국 드라마 명대사 노트, 형식 미정</li>
+      <li><span class="dir">translation/</span> 오역 사례 분석 — 亡羊补牢 항목이 첫 후보</li>
+      <li><span class="dir">hsk/</span> HSK 어휘·성조 정리</li>
+    </ul>
+  </div>
+
+  <footer>
+    <span>정적 미리보기 · Node 색인 스크립트는 GitHub Actions에서 실행됨</span>
+    <span id="genDate"></span>
+  </footer>
+</div>
+
+<script>
+const DATA = [
+  {
+    id:'ri-jiu-yue-jiang', hanzi:'日就月将', pinyin:'rì jiù yuè jiāng', hangul:'일취월장',
+    meaning:'나날이 나아지고 다달이 발전함', category:'학습·노력',
+    tags:['노력','성장','꾸준함'], korean_equivalent:'괄목상대',
+    meaning_zh:'每天有成就，每月有进步',
+    def:'날마다 이루고 달마다 나아간다는 뜻으로, 학문이나 실력이 끊임없이 발전함을 이릅니다.<br>就：성취하다. 将：나아가다(前进).',
+    def_zh:'每天有所成就，每月有所进步。多用于形容学问、技艺不断精进。',
+    defNote:'<code>将</code>을 여기서는 <b style="color:var(--seal)">jiāng</b>으로 읽습니다. 흔히 아는 jiàng(장수)·jiāng(장차)과 달리 이 성어에서는 前进의 뜻이라 성조와 의미를 함께 외워두어야 합니다.',
+    source:'《诗经·周颂·敬之》',
+    sourceNote:'주(周)나라 성왕(成王)이 스스로를 경계하며 신하들에게 가르침을 청하는 대목입니다.',
+    quote:{zh:'日就月将，学有缉熙于光明。', ko:'날로 나아가고 달로 발전하여, 배움이 이어져 밝은 경지에 이른다.'},
+    examples:[
+      {zh:'他的书法<b>日就月将</b>，如今已小有名气。', ko:'그의 서예는 <b>나날이 발전하여</b> 이제는 제법 이름이 알려졌다.'},
+      {zh:'只要坚持练习，口语自然会<b>日就月将</b>。', ko:'꾸준히 연습하기만 하면 회화는 자연히 <b>일취월장</b>한다.'}
+    ],
+    usage:'한국어에서도 "일취월장하다" 형태로 그대로 쓰입니다. 실력·성적·기량이 눈에 띄게 늘었을 때 쓰며, 중국어보다 오히려 구어에서 더 자주 등장합니다.<br><br>"한 학기 만에 중국어 실력이 일취월장했다."<br><br>뜻이 가까운 성어로 <b>괄목상대(刮目相對)</b>가 있지만, 괄목상대는 보는 사람이 놀랄 만큼 달라졌다는 쪽에, 일취월장은 꾸준히 쌓여 나아간다는 과정 쪽에 무게가 있습니다.',
+    seen:null,
+    note:'중국어에서는 다소 문어적(书面语)이라 일상 대화에서는 <code>进步很快</code>를 더 많이 씀. 한국어 쪽 체감 빈도와 차이가 크므로 번역할 때 주의.',
+    cross:['gua-mu-xiang-kan']
+  },
+  {
+    id:'hua-she-tian-zu', hanzi:'画蛇添足', pinyin:'huà shé tiān zú', hangul:'화사첨족',
+    meaning:'뱀을 그리고 발을 덧붙임 — 쓸데없는 짓으로 일을 그르침', category:'처세·경계',
+    tags:['과유불급','실수','우화'], korean_equivalent:'사족(蛇足)',
+    meaning_zh:'做了多余的事，反而弄巧成拙',
+    def:'뱀을 다 그리고 나서 있지도 않은 발을 덧붙인다는 뜻으로, <b>하지 않아도 될 일을 덧붙여 도리어 일을 망치는 것</b>을 이릅니다.',
+    def_zh:'做多余的事，非但无益，反而坏事。',
+    source:'《战国策·齐策二》',
+    sourceNote:'초(楚)나라에서 여러 사람이 술 한 잔을 두고 뱀을 먼저 그리는 사람이 마시기로 했습니다. 가장 먼저 그린 사람이 여유를 부리며 발까지 그려 넣자, 뒤이어 완성한 사람이 술잔을 빼앗으며 말했습니다.',
+    quote:{zh:'蛇固无足，子安能为之足？', ko:'뱀에게는 본디 발이 없는데, 그대가 어찌 발을 그린단 말인가?'},
+    examples:[
+      {zh:'这篇文章结尾再加解释就是<b>画蛇添足</b>了。', ko:'이 글은 마지막에 설명을 더 붙이면 <b>사족</b>이다.'},
+      {zh:'他本来说得很好，最后那句纯属<b>画蛇添足</b>。', ko:'그는 원래 잘 말했는데, 마지막 그 한마디는 순전히 <b>군더더기</b>였다.'}
+    ],
+    usage:'한국어에서는 네 글자 그대로보다 <b>"사족(蛇足)"</b>이라는 두 글자 형태로 훨씬 많이 씁니다.<br><br>"사족을 달자면…" · "이 설명은 사족이다."<br><br>번역할 때 <code>画蛇添足</code>를 무조건 "화사첨족"으로 옮기면 어색합니다. 문맥에 따라 <b>사족 / 군더더기 / 과유불급</b> 중에서 고르는 편이 자연스럽습니다.',
+    seen:null,
+    note:'비슷한 성어: 多此一举(duō cǐ yī jǔ) — 이쪽이 구어에서 더 자주 쓰임.',
+    cross:[]
+  },
+  {
+    id:'shou-zhu-dai-tu', hanzi:'守株待兔', pinyin:'shǒu zhū dài tù', hangul:'수주대토',
+    meaning:'그루터기를 지키며 토끼를 기다림 — 요행만 바라며 애쓰지 않음', category:'처세·경계',
+    tags:['요행','고지식','우화'], korean_equivalent:null,
+    meaning_zh:'死守狭隘经验，妄想不劳而获',
+    def:'우연히 얻은 행운을 잊지 못해 <b>같은 일이 또 일어나기만 기다리며 노력하지 않는 것</b>을 이릅니다. 낡은 경험에 매달려 융통성이 없음을 비판할 때도 씁니다.',
+    def_zh:'比喻不主动努力，只想靠侥幸得到成功。',
+    source:'《韩非子·五蠹》',
+    sourceNote:'송(宋)나라 농부의 밭에 그루터기가 있었는데, 토끼가 달려오다 거기에 부딪혀 죽었습니다. 농부는 그 뒤로 쟁기를 버리고 그루터기만 지켰지만 토끼는 다시 오지 않았고, 밭은 황폐해져 온 나라의 웃음거리가 되었습니다.',
+    quote:{zh:'因释其耒而守株，冀复得兔。兔不可复得，而身为宋国笑。', ko:null},
+    examples:[
+      {zh:'不能<b>守株待兔</b>，要主动去找机会。', ko:'<b>요행만 기다리지</b> 말고 적극적으로 기회를 찾아야 한다.'},
+      {zh:'他还在用十年前的方法，简直是<b>守株待兔</b>。', ko:'그는 아직도 10년 전 방식을 쓰고 있으니, 그야말로 <b>수주대토</b>다.'}
+    ],
+    usage:'한국어에서도 "수주대토"로 쓰이지만 빈도는 낮습니다. 일상에서는 <b>"감나무 밑에 누워 홍시 떨어지기를 기다린다"</b>는 속담이 같은 뜻으로 훨씬 자주 쓰입니다.',
+    seen:null,
+    note:'한비자는 이 이야기로 "옛 성왕의 정치를 그대로 따르려는 태도"를 비판했습니다. 원래 맥락은 게으름보다 <b>시대착오</b>에 대한 비판이라는 점이 한국어 용법과 다릅니다.',
+    cross:['ke-zhou-qiu-jian']
+  },
+  {
+    id:'sai-weng-shi-ma', hanzi:'塞翁失马', pinyin:'sài wēng shī mǎ', hangul:'새옹실마',
+    meaning:'변방 노인이 말을 잃음 — 화복은 미리 알 수 없음', category:'인생·운명',
+    tags:['화복','전화위복','우화'], korean_equivalent:'새옹지마(塞翁之馬)',
+    meaning_zh:'福祸相依，坏事可能变好事',
+    def:'당장의 불행이 훗날의 복이 되고, 복이 도리어 화가 되기도 하니 <b>눈앞의 일로 기뻐하거나 슬퍼할 것이 아니라</b>는 뜻입니다.',
+    def_zh:'比喻一时受到损失，反而可能因此得到好处；福祸无常。<br>중국어에서는 흔히 뒤를 이어 <b>塞翁失马，焉知非福</b>(새옹이 말을 잃은 것이 복이 아닌 줄 어찌 알겠는가) 형태로 씁니다.',
+    source:'《淮南子·人间训》',
+    sourceNote:'변방에 사는 노인의 말이 달아났지만(불행) 얼마 뒤 준마를 데리고 돌아왔고(행운), 아들이 그 말을 타다 다리가 부러졌으나(불행) 그 덕에 징집을 면해 목숨을 건졌습니다(행운).',
+    quote:{zh:'福之为祸，祸之为福，化不可极，深不可测也。', ko:null},
+    examples:[
+      {zh:'这次没被录取也不一定是坏事，<b>塞翁失马</b>，焉知非福。', ko:'이번에 불합격한 것도 꼭 나쁜 일은 아니다. <b>새옹지마</b>라 하지 않는가.'}
+    ],
+    usage:'한국어에서는 <b>"새옹지마(塞翁之馬)"</b> 형태가 표준이며, "인간만사 새옹지마"라는 관용구로 굳어져 있습니다. 중국어 <code>塞翁失马</code>와 <b>글자 구성이 다르다</b>는 점에 주의하세요.',
+    compare:{head:['','중국어','한국어'], rows:[['형태','塞翁失马','塞翁之馬'],['자주 쓰는 꼴','塞翁失马，焉知非福','인간만사 새옹지마']]},
+    seen:null,
+    note:'한중 성어가 <b>글자까지 같지는 않은</b> 대표 사례. 번역·작문 시험에서 자주 나오는 함정.',
+    cross:['gua-mu-xiang-kan']
+  },
+  {
+    id:'ke-zhou-qiu-jian', hanzi:'刻舟求剑', pinyin:'kè zhōu qiú jiàn', hangul:'각주구검',
+    meaning:'뱃전에 표시하고 칼을 찾음 — 변화를 모르고 옛것에 매달림', category:'처세·경계',
+    tags:['융통성','시대착오','우화'], korean_equivalent:null,
+    meaning_zh:'拘泥成法，不知变通',
+    def:'상황이 이미 변했는데도 <b>낡은 기준에 매달려 융통성 없이 구는 것</b>을 이릅니다.',
+    def_zh:'比喻办事方法死板，不懂得随情况变化而改变。',
+    source:'《吕氏春秋·察今》',
+    sourceNote:'초나라 사람이 배를 타고 강을 건너다 칼을 물에 빠뜨리자, 뱃전에 표시를 새기며 "여기서 빠뜨렸다"고 했습니다. 배가 나루에 닿은 뒤 그 표시를 따라 물에 들어가 칼을 찾았지만 있을 리가 없었습니다.',
+    quote:{zh:'舟已行矣，而剑不行，求剑若此，不亦惑乎？', ko:'배는 이미 움직였으나 칼은 움직이지 않았으니, 이렇게 칼을 찾는 것이 어찌 어리석지 않은가?'},
+    examples:[
+      {zh:'市场变了，还用老办法就是<b>刻舟求剑</b>。', ko:'시장이 변했는데 옛 방식만 쓰는 것은 <b>각주구검</b>이다.'}
+    ],
+    usage:'한국어에서도 "각주구검"으로 쓰이며, 주로 글말·논설문에서 등장합니다. 구어에서는 "시대착오적이다", "융통성이 없다"로 풀어 쓰는 편이 자연스럽습니다.',
+    seen:null,
+    note:'<a href="#shou-zhu-dai-tu">수주대토</a>와 뜻이 겹치지만, 수주대토는 <b>노력하지 않음</b>에, 각주구검은 <b>변화를 읽지 못함</b>에 초점이 있습니다.',
+    cross:['shou-zhu-dai-tu']
+  },
+  {
+    id:'jing-di-zhi-wa', hanzi:'井底之蛙', pinyin:'jǐng dǐ zhī wā', hangul:'정저지와',
+    meaning:'우물 안 개구리 — 견문이 좁은 사람', category:'견문·태도',
+    tags:['편협','견문','우화'], korean_equivalent:'우물 안 개구리',
+    meaning_zh:'见识短浅的人',
+    def:'우물 바닥의 개구리가 하늘을 우물만 하다고 여긴다는 뜻으로, <b>좁은 세계만 알면서 그것이 전부인 줄 아는 사람</b>을 이릅니다.',
+    def_zh:'比喻见识狭窄的人。',
+    source:'《庄子·秋水》',
+    sourceNote:'우물 안 개구리가 동해의 자라에게 자기 우물의 즐거움을 자랑했으나, 자라가 바다의 크기를 이야기하자 개구리는 놀라 어쩔 줄 몰랐습니다.',
+    quote:{zh:'井蛙不可以语于海者，拘于虚也。', ko:'우물 안 개구리에게 바다를 말할 수 없는 것은, 그가 좁은 곳에 갇혀 있기 때문이다.'},
+    examples:[
+      {zh:'出国以后才发现自己以前就是个<b>井底之蛙</b>。', ko:'외국에 나간 뒤에야 내가 예전에 <b>우물 안 개구리</b>였음을 알았다.'}
+    ],
+    usage:'한국어에서는 한자어 "정저지와"보다 <b>순우리말 번역인 "우물 안 개구리"</b>가 압도적으로 많이 쓰입니다. 번역할 때는 거의 항상 "우물 안 개구리"로 옮기면 됩니다.',
+    seen:null,
+    note:'원문은 <code>井蛙</code>이고, <code>井底之蛙</code>는 후대에 굳어진 형태입니다. 같은 《추수》편에서 나온 성어: 望洋兴叹(wàng yáng xīng tàn).',
+    cross:[]
+  },
+  {
+    id:'wang-yang-bu-lao', hanzi:'亡羊补牢', pinyin:'wáng yáng bǔ láo', hangul:'망양보뢰',
+    meaning:'양을 잃고 우리를 고침 — 늦게라도 바로잡으면 늦지 않음', category:'처세·경계',
+    tags:['사후대처','만회','우화','오역주의'], korean_equivalent:'소 잃고 외양간 고친다',
+    meaning_zh:'出了问题及时补救，还不算晚',
+    def:'양을 잃은 뒤에라도 우리를 고치면 남은 양은 지킬 수 있다는 뜻으로, <b>잘못을 깨달은 즉시 바로잡으면 아주 늦은 것은 아니다</b>라는 말입니다.',
+    def_zh:'比喻出了问题以后想办法补救，可以防止继续受损失。<br>흔히 <b>亡羊补牢，为时未晚</b>(늦지 않았다) 형태로 씁니다.',
+    source:'《战国策·楚策四》',
+    quote:{zh:'见兔而顾犬，未为晚也；亡羊而补牢，未为迟也。', ko:'토끼를 보고 개를 부르는 것도 늦지 않고, 양을 잃고 우리를 고치는 것도 늦지 않다.'},
+    examples:[
+      {zh:'现在开始复习还来得及，<b>亡羊补牢</b>，为时未晚。', ko:'지금부터 복습해도 늦지 않다, <b>늦게라도 바로잡으면</b> 된다.'}
+    ],
+    usage:'<b style="color:var(--seal)">주의 — 한중 뉘앙스가 정반대입니다.</b>',
+    compare:{head:['','뉘앙스'], rows:[['중국어 亡羊补牢','긍정 — "지금이라도 고치면 늦지 않다"는 격려'],['한국어 "소 잃고 외양간 고친다"','부정 — "이미 늦었다"는 비아냥']]},
+    usageNote:'한국 속담이 형태는 꼭 닮았지만 평가의 방향이 반대이므로, <code>亡羊补牢，为时未晚</code>을 "소 잃고 외양간 고친다"로 옮기면 <b>오역</b>이 됩니다. "늦었다고 생각할 때가 가장 빠르다" 쪽이 원문 의도에 맞습니다.',
+    seen:null,
+    note:'오역 사례로 정리해 둘 것 → <code>translation/</code> 폴더로 옮길 후보.',
+    cross:[]
+  },
+  {
+    id:'yi-ju-liang-de', hanzi:'一举两得', pinyin:'yī jǔ liǎng dé', hangul:'일거양득',
+    meaning:'한 가지 일로 두 가지 이득을 얻음', category:'처세·이익',
+    tags:['효율','이득'], korean_equivalent:'일석이조(一石二鳥)',
+    meaning_zh:'做一件事得到两方面的好处',
+    def:'한 번의 행동으로 두 가지 이익을 동시에 얻는 것을 말합니다.',
+    def_zh:'做一件事情，同时获得两种好处。',
+    source:'《晋书·束皙传》',
+    sourceUncertain:true,
+    examples:[
+      {zh:'骑自行车上班既省钱又锻炼身体，真是<b>一举两得</b>。', ko:'자전거로 출근하면 돈도 아끼고 운동도 되니 그야말로 <b>일거양득</b>이다.'}
+    ],
+    usage:'"일거양득"과 <b>"일석이조(一石二鳥)"</b>가 모두 쓰이는데, 일상 빈도는 <b>일석이조</b>가 더 높습니다. 다만 일석이조는 영어 kill two birds with one stone의 번역어 계통이라 중국어에는 대응 성어가 없으므로, 중→한 번역에서는 둘 다 자연스럽습니다.<br><br>중국어에서 비슷한 말: <code>一石二鸟</code>(외래 번역투), <code>一箭双雕</code>(yī jiàn shuāng diāo).',
+    seen:null,
+    note:'출전 표기 <b>(확인 필요)</b> — 《晋书·束皙传》로 보는 사전이 많으나 《东观汉记》 계통으로 보는 설도 있음. 도서관에서 원문 대조할 것.',
+    cross:[]
+  },
+  {
+    id:'ku-jin-gan-lai', hanzi:'苦尽甘来', pinyin:'kǔ jìn gān lái', hangul:'고진감래',
+    meaning:'쓴 것이 다하면 단 것이 옴 — 고생 끝에 낙이 옴', category:'인생·운명',
+    tags:['인내','보상'], korean_equivalent:'고생 끝에 낙이 온다',
+    meaning_zh:'艰难过去，美好到来',
+    def:'괴로운 시기가 끝나면 즐거운 때가 온다는 뜻으로, <b>어려움을 견디면 좋은 날이 온다</b>는 격려의 말입니다.',
+    def_zh:'艰苦的日子过去了，美好的日子来到了。',
+    source:null,
+    sourceNote:'원대(元代) 희곡에서 널리 쓰이기 시작한 표현입니다. (아래 메모 참고)',
+    examples:[
+      {zh:'熬了这么多年，终于<b>苦尽甘来</b>了。', ko:'이렇게 여러 해를 버텼으니, 드디어 <b>고진감래</b>다.'}
+    ],
+    usage:'한국어에서 매우 활발하게 쓰이는 성어입니다. 글말에서는 "고진감래", 구어에서는 <b>"고생 끝에 낙이 온다"</b> 속담 형태가 자주 쓰입니다.<br><br>반대 뜻: <b>흥진비래(興盡悲來)</b> — 중국어 <code>兴尽悲来</code>와 짝을 이룹니다.',
+    seen:null,
+    note:'출전 <b>(확인 필요)</b> — 元 关汉卿《蝴蝶梦》, 王实甫《西厢记》 등 여러 출처가 거론됨. 확정 전까지 source 필드는 비워 둠.',
+    cross:[]
+  },
+  {
+    id:'gua-mu-xiang-kan', hanzi:'刮目相看', pinyin:'guā mù xiāng kàn', hangul:'괄목상간',
+    meaning:'눈을 비비고 다시 봄 — 몰라보게 달라진 것을 새롭게 평가함', category:'학습·노력',
+    tags:['성장','재평가'], korean_equivalent:'괄목상대(刮目相對)',
+    meaning_zh:'用新的眼光看待有了明显进步的人',
+    def:'눈을 비비고 상대를 다시 본다는 뜻으로, <b>크게 달라진 사람을 예전의 기준으로 보지 않고 새롭게 평가하는 것</b>을 이릅니다.',
+    def_zh:'指别人已有很大进步，不能再用老眼光看待。',
+    source:'《三国志·吴志·吕蒙传》 배송지 주에 인용된 《江表传》',
+    sourceNote:'오(吳)나라 장수 여몽(吕蒙)은 무예만 알고 학문이 없었으나, 손권의 권유로 공부에 힘써 학식이 깊어졌습니다. 노숙(鲁肃)이 그와 이야기하다 놀라자 여몽이 말했습니다.',
+    quote:{zh:'士别三日，即更刮目相待。', ko:'선비는 헤어진 지 사흘이면 눈을 비비고 다시 보아야 한다.'},
+    examples:[
+      {zh:'才一年不见，他的中文让人<b>刮目相看</b>。', ko:'겨우 일 년 만인데, 그의 중국어는 <b>몰라보게</b> 늘었다.'}
+    ],
+    usage:'한국어 표준형은 <b>"괄목상대(刮目相對)"</b>로, 중국어 <code>刮目相看</code>과 마지막 글자가 다릅니다(看 ↔ 對). 원문 <code>刮目相待</code>에서 갈라져 나온 형태입니다.<br><br>"한 학기 만에 괄목상대할 만큼 성장했다."',
+    seen:null,
+    note:'같은 일화에서 나온 성어: <b>吴下阿蒙</b>(wú xià ā méng) — 발전 없는 옛 모습의 사람.<br><a href="#ri-jiu-yue-jiang">일취월장</a>과 짝지어 외우면 좋음. 일취월장 = 쌓여가는 <b>과정</b>, 괄목상대 = 달라짐을 확인한 <b>결과</b>.<br>한중 글자가 다른 사례 → <a href="#sai-weng-shi-ma">새옹지마</a>와 함께 정리.',
+    cross:['ri-jiu-yue-jiang','sai-weng-shi-ma']
+  },
+];
+
+const byId = Object.fromEntries(DATA.map(d=>[d.id,d]));
+const categories = ['전체', ...Array.from(new Set(DATA.map(d=>d.category)))];
+
+// filters
+const filtersEl = document.getElementById('filters');
+let activeCat = '전체';
+function renderFilters(){
+  filtersEl.innerHTML = '';
+  categories.forEach(cat=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (cat===activeCat ? ' active' : '');
+    b.textContent = cat;
+    b.addEventListener('click', ()=>{ activeCat = cat; renderFilters(); renderGrid(); });
+    filtersEl.appendChild(b);
+  });
+}
+
+// stamp grid
+const gridEl = document.getElementById('stampGrid');
+function renderGrid(){
+  gridEl.innerHTML = '';
+  DATA.forEach((d,i)=>{
+    if(activeCat!=='전체' && d.category!==activeCat) return;
+    const a = document.createElement('a');
+    a.className = 'stamp';
+    a.href = '#'+d.id;
+    a.addEventListener('click', (e)=>{
+      e.preventDefault();
+      openEntry(d.id);
+      document.getElementById(d.id).scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    a.innerHTML = `
+      <span class="idx">${String(i+1).padStart(2,'0')}</span>
+      <div class="hanzi">${d.hanzi}</div>
+      <div class="pinyin">${d.pinyin}</div>
+      <div class="hangul">${d.hangul}</div>
+    `;
+    gridEl.appendChild(a);
+  });
+}
+
+// entries
+const entriesEl = document.getElementById('entries');
+function fieldBlock(title, bodyHtml, extra){
+  if(!bodyHtml) return `<div class="field empty"><h3>${title}</h3><p>(아직 채우지 않음)</p></div>`;
+  return `<div class="field"><h3>${title}</h3>${bodyHtml}${extra||''}</div>`;
+}
+function renderEntry(d, i){
+  const tagsHtml = d.tags.map(t=>`<span class="tag${t==='오역주의'?' warn':''}">${t}</span>`).join('');
+
+  let meaningField = `<p>${d.def}</p>` + (d.def_zh?`<p class="zh">${d.def_zh}</p>`:'') + (d.defNote?`<p class="en" style="margin-top:8px;">${d.defNote}</p>`:'');
+
+  let sourceField = '';
+  if(d.source){
+    sourceField = `<p>${d.source}</p>` + (d.sourceNote?`<p>${d.sourceNote}</p>`:'') +
+      (d.quote ? `<div class="quote"><div class="zh-line">${d.quote.zh}</div>${d.quote.ko?`<div class="ko-line">${d.quote.ko}</div>`:''}</div>` : '');
+  } else if(d.sourceNote){
+    sourceField = `<p>${d.sourceNote}</p><div class="note-flag">◆ source 미확정</div>`;
+  }
+
+  let exField = (d.examples||[]).map(ex=>`<div class="example"><div class="zh">${ex.zh}</div><div class="ko">${ex.ko}</div></div>`).join('');
+
+  let usageField = (d.usage?`<p>${d.usage}</p>`:'') +
+    (d.compare ? `<table class="compare-table"><thead><tr>${d.compare.head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${d.compare.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>` : '') +
+    (d.usageNote?`<p style="margin-top:10px;">${d.usageNote}</p>`:'');
+
+  let seenField = d.seen ? `<p>${d.seen}</p>` : null;
+
+  let noteField = d.note ? `<p>${d.note}</p>` : null;
+
+  const crossHtml = (d.cross&&d.cross.length) ? `<div class="crosslinks" style="margin-top:4px; font-size:13px; color:var(--ink-faint);">관련: ${d.cross.map(c=>`<a href="#${c}" data-nav="${c}">${byId[c].hangul}</a>`).join(', ')}</div>` : '';
+
+  const wrap = document.createElement('article');
+  wrap.className = 'entry';
+  wrap.id = d.id;
+  wrap.innerHTML = `
+    <div class="entry-head" role="button" tabindex="0" aria-expanded="false">
+      <div class="glyph">${d.hanzi}</div>
+      <div class="id">
+        <div class="row1">
+          <span class="hangul-title">${d.hangul}</span>
+          <span class="pinyin">${d.pinyin}</span>
+        </div>
+        <div class="meaning">${d.meaning}</div>
+        <div class="tags">${tagsHtml}</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="entry-body">
+      <div class="entry-body-inner">
+        <div class="entry-content">
+          ${fieldBlock('뜻 · 释义', meaningField)}
+          ${fieldBlock('출전 · 出典', sourceField)}
+          ${fieldBlock('예문 · 例句', exField)}
+          ${fieldBlock('한국어 쓰임 · 韩语用法', usageField)}
+          ${fieldBlock('어디서 봤나 · 见于', seenField)}
+          ${fieldBlock('메모 · 笔记', noteField, crossHtml)}
+        </div>
+      </div>
+    </div>
+  `;
+  const head = wrap.querySelector('.entry-head');
+  const toggle = ()=>{
+    const isOpen = wrap.classList.toggle('open');
+    head.setAttribute('aria-expanded', String(isOpen));
+  };
+  head.addEventListener('click', toggle);
+  head.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+  wrap.querySelectorAll('a[data-nav]').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const id = a.getAttribute('data-nav');
+      openEntry(id);
+      document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+  return wrap;
+}
+function renderEntries(){
+  entriesEl.innerHTML = '';
+  DATA.forEach((d,i)=> entriesEl.appendChild(renderEntry(d,i)));
+}
+function openEntry(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  if(!el.classList.contains('open')){
+    el.classList.add('open');
+    el.querySelector('.entry-head').setAttribute('aria-expanded','true');
+  }
+}
+
+renderFilters();
+renderGrid();
+renderEntries();
+
+// open from hash on load
+if(location.hash){
+  const id = location.hash.slice(1);
+  openEntry(id);
+  setTimeout(()=>{ const el=document.getElementById(id); if(el) el.scrollIntoView({block:'start'}); }, 50);
+} else {
+  openEntry('ri-jiu-yue-jiang');
+}
+
+document.getElementById('genDate').textContent = '최종 확인 2026-09-15 · main@7b51404';
+</script>
+</body>
+</html>
